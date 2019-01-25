@@ -19,6 +19,11 @@ package org.apache.maven.doxia.module.markdown;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.vladsch.flexmark.ext.wikilink.internal.WikiLinkLinkResolver;
 import com.vladsch.flexmark.html.IndependentLinkResolverFactory;
 import com.vladsch.flexmark.html.LinkResolver;
@@ -29,22 +34,37 @@ import com.vladsch.flexmark.html.renderer.LinkType;
 import com.vladsch.flexmark.html.renderer.ResolvedLink;
 import com.vladsch.flexmark.util.ast.Node;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
- * The FlexmarkDoxiaLinkResolver rewrites .md and .markdown links to .html
+ * The FlexmarkDoxiaLinkResolver rewrites the md, markdown links to html.
+ *
+ * Sample links it rewrites:
+ * - doc.md -> doc.html
+ * - doc.markdown -> doc.html
+ * - doc.md#anchor -> doc.html#anchor
+ * - doc.markdown#anchor -> doc.html#anchor
+ * - :doc.md -> :doc.html
+ * - :doc.markdown -> :doc.html
+ *
+ * Sample links it leaves untouched:
+ * - http://doc.md
+ * - https://doc.markdown
+ * - doc.md.badformat
+ * - doc.md#bad#format
+ * - doc.md#bad.format
  */
 public class FlexmarkDoxiaLinkResolver implements LinkResolver
 {
-    final String[] inputFileExtensions;
+    final Pattern pattern;
 
     public FlexmarkDoxiaLinkResolver( LinkResolverContext context )
     {
-        this.inputFileExtensions = new String[] {
-                                        MarkdownParserModule.FILE_EXTENSION,
-                                        MarkdownParserModule.ALTERNATE_FILE_EXTENSION
-                                    };
+        this.pattern = Pattern.compile(
+                            "^(?![^:]+:)([^\\.]+).(?:"                      +
+                            MarkdownParserModule.FILE_EXTENSION             +
+                            "|"                                             +
+                            MarkdownParserModule.ALTERNATE_FILE_EXTENSION   +
+                            ")(#[^#\\.]*){0,1}$"
+                        );
     }
 
     @Override
@@ -52,26 +72,9 @@ public class FlexmarkDoxiaLinkResolver implements LinkResolver
     {
         if ( link.getLinkType() == LinkType.LINK )
         {
-            for ( String inputFileExtension : inputFileExtensions )
-            {
-                String url = link.getUrl();
-                if ( !url.startsWith( "http://" ) && !url.startsWith( "https://" ) )
-                {
-                    if ( url.endsWith( "." + inputFileExtension ) )
-                    {
-                        url = url.substring( 0, url.length() - inputFileExtension.length() ) + "html";
-                        return link.withStatus( LinkStatus.VALID ).withUrl( url );
-                    }
-                    else
-                    {
-                        if ( url.contains( "." + inputFileExtension + "#" ) )
-                        {
-                            url = url.replace( "." + inputFileExtension + "#", ".html#" );
-                            return link.withStatus( LinkStatus.VALID ).withUrl( url );
-                        }
-                    }
-                }
-            }
+            Matcher matcher = this.pattern.matcher(link.getUrl());
+            if ( matcher.matches() )
+                return link.withStatus( LinkStatus.VALID ).withUrl(matcher.replaceAll("$1.html$2"));
         }
 
         return link;
