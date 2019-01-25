@@ -172,17 +172,18 @@ public class MarkdownParserTest
      * @throws Exception if the event list is not correct when parsing the document.
      */
     public void testLinkRewriteSinkEvent()
-            throws Exception
+        throws Exception
     {
         List<SinkEventElement> eventList = parseFileToEventTestingSink( "link_rewrite" ).getEventList();
 
         Iterator<SinkEventElement> it = eventList.iterator();
-        assertEquals( it, "head", "head_", "body", "paragraph", "text", "link", "text", "link_", "text", "link", "text", "link_", "text", "paragraph_", "body_" );
+        assertEquals( it, "head", "head_", "body", "paragraph", "text", "link", "text", "link_", "text", "link", "text",
+                      "link_", "text", "paragraph_", "body_" );
 
         assertFalse( it.hasNext() );
 
-        assertEquals("doc.html", eventList.get(5).getArgs()[0]);
-        assertEquals("ftp://doc.md", eventList.get(9).getArgs()[0]);
+        assertEquals( "doc.html", eventList.get( 5 ).getArgs()[0] );
+        assertEquals( "ftp://doc.md", eventList.get( 9 ).getArgs()[0] );
     }
 
     public void testLinkWithAnchorAndQuery() throws Exception

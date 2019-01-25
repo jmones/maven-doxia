@@ -24,70 +24,71 @@ import com.vladsch.flexmark.html.renderer.LinkType;
 import com.vladsch.flexmark.html.renderer.ResolvedLink;
 import junit.framework.TestCase;
 
-public class FlexmarkDoxiaLinkResolverTest extends TestCase {
+public class FlexmarkDoxiaLinkResolverTest
+    extends TestCase
+{
 
     public void testResolveLink()
     {
-        ResolvedLink originalLink;
-        ResolvedLink rewrittenLink;
-        FlexmarkDoxiaLinkResolver flexmarkDoxiaLinkResolver = new FlexmarkDoxiaLinkResolver(null);
+        FlexmarkDoxiaLinkResolver flexmarkDoxiaLinkResolver = new FlexmarkDoxiaLinkResolver( null );
 
-        checkLinkRewritten(flexmarkDoxiaLinkResolver, "doc.md", "doc.html");
-        checkLinkRewritten(flexmarkDoxiaLinkResolver, "doc.markdown", "doc.html");
+        checkLinkRewritten( flexmarkDoxiaLinkResolver, "doc.md", "doc.html" );
+        checkLinkRewritten( flexmarkDoxiaLinkResolver, "doc.markdown", "doc.html" );
 
-        checkLinkRewritten(flexmarkDoxiaLinkResolver, "doc.md#anchor", "doc.html#anchor");
-        checkLinkRewritten(flexmarkDoxiaLinkResolver, "doc.markdown#anchor", "doc.html#anchor");
+        checkLinkRewritten( flexmarkDoxiaLinkResolver, "doc.md#anchor", "doc.html#anchor" );
+        checkLinkRewritten( flexmarkDoxiaLinkResolver, "doc.markdown#anchor", "doc.html#anchor" );
 
         // these edge cases are still allowed
-        checkLinkRewritten(flexmarkDoxiaLinkResolver, ":doc.md", ":doc.html");
-        checkLinkRewritten(flexmarkDoxiaLinkResolver, ":doc.markdown", ":doc.html");
+        checkLinkRewritten( flexmarkDoxiaLinkResolver, ":doc.md", ":doc.html" );
+        checkLinkRewritten( flexmarkDoxiaLinkResolver, ":doc.markdown", ":doc.html" );
 
-        checkLinkRewritten(flexmarkDoxiaLinkResolver, ":doc.md#anchor", ":doc.html#anchor");
-        checkLinkRewritten(flexmarkDoxiaLinkResolver, ":doc.markdown#anchor", ":doc.html#anchor");
+        checkLinkRewritten( flexmarkDoxiaLinkResolver, ":doc.md#anchor", ":doc.html#anchor" );
+        checkLinkRewritten( flexmarkDoxiaLinkResolver, ":doc.markdown#anchor", ":doc.html#anchor" );
 
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "doc.md", LinkType.LINK_REF);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "doc.md", LinkType.IMAGE);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "doc.md", LinkType.IMAGE_REF);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "doc.markdown", LinkType.LINK_REF);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "doc.markdown", LinkType.IMAGE);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "doc.markdown", LinkType.IMAGE_REF);
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "doc.md", LinkType.LINK_REF );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "doc.md", LinkType.IMAGE );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "doc.md", LinkType.IMAGE_REF );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "doc.markdown", LinkType.LINK_REF );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "doc.markdown", LinkType.IMAGE );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "doc.markdown", LinkType.IMAGE_REF );
 
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "http://doc.md", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "https://doc.md", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "ftp://doc.md", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "http://doc.markdown", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "https://doc.markdown", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "ftp://doc.markdown", LinkType.LINK);
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "http://doc.md", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "https://doc.md", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "ftp://doc.md", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "http://doc.markdown", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "https://doc.markdown", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "ftp://doc.markdown", LinkType.LINK );
 
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "docs.md.badformat", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "docs.markdown.badformat", LinkType.LINK);
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "docs.md.badformat", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "docs.markdown.badformat", LinkType.LINK );
 
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "docs.md#bad#format", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "docs.md#bad.format", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "docs.md.bad#format", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "docs.markdown#bad#format", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "docs.markdown#bad.format", LinkType.LINK);
-        checkLinkLeftUnchanged(flexmarkDoxiaLinkResolver, "docs.markdown.bad#format", LinkType.LINK);
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "docs.md#bad#format", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "docs.md#bad.format", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "docs.md.bad#format", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "docs.markdown#bad#format", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "docs.markdown#bad.format", LinkType.LINK );
+        checkLinkLeftUnchanged( flexmarkDoxiaLinkResolver, "docs.markdown.bad#format", LinkType.LINK );
     }
 
-
-    private static void checkLinkLeftUnchanged( FlexmarkDoxiaLinkResolver flexmarkDoxiaLinkResolver, String url, LinkType linkType )
+    private static void checkLinkLeftUnchanged( FlexmarkDoxiaLinkResolver flexmarkDoxiaLinkResolver, String url,
+                                                LinkType linkType )
     {
-        ResolvedLink originalLink = new ResolvedLink(linkType, url);
-        ResolvedLink rewrittenLink = flexmarkDoxiaLinkResolver.resolveLink(null, null, originalLink);
+        ResolvedLink originalLink = new ResolvedLink( linkType, url );
+        ResolvedLink rewrittenLink = flexmarkDoxiaLinkResolver.resolveLink( null, null, originalLink );
 
-        assertEquals(originalLink.getLinkType(), rewrittenLink.getLinkType());
-        assertEquals(originalLink.getUrl(), rewrittenLink.getUrl());
-        assertEquals(originalLink.getStatus(), rewrittenLink.getStatus());
+        assertEquals( originalLink.getLinkType(), rewrittenLink.getLinkType() );
+        assertEquals( originalLink.getUrl(), rewrittenLink.getUrl() );
+        assertEquals( originalLink.getStatus(), rewrittenLink.getStatus() );
     }
 
-    private static void checkLinkRewritten( FlexmarkDoxiaLinkResolver flexmarkDoxiaLinkResolver, String originalUrl, String expectedUrl )
+    private static void checkLinkRewritten( FlexmarkDoxiaLinkResolver flexmarkDoxiaLinkResolver, String originalUrl,
+                                            String expectedUrl )
     {
-        ResolvedLink originalLink = new ResolvedLink(LinkType.LINK, originalUrl);
-        ResolvedLink rewrittenLink = flexmarkDoxiaLinkResolver.resolveLink(null, null, originalLink);
+        ResolvedLink originalLink = new ResolvedLink( LinkType.LINK, originalUrl );
+        ResolvedLink rewrittenLink = flexmarkDoxiaLinkResolver.resolveLink( null, null, originalLink );
 
-        assertEquals(originalLink.getLinkType(), rewrittenLink.getLinkType());
-        assertEquals(expectedUrl, rewrittenLink.getUrl());
-        assertEquals(LinkStatus.VALID, rewrittenLink.getStatus());
+        assertEquals( originalLink.getLinkType(), rewrittenLink.getLinkType() );
+        assertEquals( expectedUrl, rewrittenLink.getUrl() );
+        assertEquals( LinkStatus.VALID, rewrittenLink.getStatus() );
     }
 }
