@@ -59,11 +59,11 @@ public class FlexmarkDoxiaLinkResolver implements LinkResolver
     public FlexmarkDoxiaLinkResolver( LinkResolverContext context )
     {
         this.pattern = Pattern.compile(
-                            "^(?![^:]+:)([^\\.]+).(?:"                      +
-                            MarkdownParserModule.FILE_EXTENSION             +
-                            "|"                                             +
-                            MarkdownParserModule.ALTERNATE_FILE_EXTENSION   +
-                            ")(#[^#\\.]*){0,1}$"
+                            "^(?![^:]+:)([^\\.]+).(?:"
+                          + MarkdownParserModule.FILE_EXTENSION
+                          + "|"
+                          + MarkdownParserModule.ALTERNATE_FILE_EXTENSION
+                          + ")(#[^#\\.]*){0,1}$"
                         );
     }
 
@@ -72,9 +72,11 @@ public class FlexmarkDoxiaLinkResolver implements LinkResolver
     {
         if ( link.getLinkType() == LinkType.LINK )
         {
-            Matcher matcher = this.pattern.matcher(link.getUrl());
+            Matcher matcher = this.pattern.matcher( link.getUrl() );
             if ( matcher.matches() )
-                return link.withStatus( LinkStatus.VALID ).withUrl(matcher.replaceAll("$1.html$2"));
+            {
+                return link.withStatus( LinkStatus.VALID ).withUrl( matcher.replaceAll( "$1.html$2" ) );
+            }
         }
 
         return link;
